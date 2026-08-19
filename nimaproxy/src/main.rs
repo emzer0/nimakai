@@ -1,4 +1,5 @@
 use axum::{http::StatusCode, response::IntoResponse, routing::get, routing::post, Router};
+use tower_http::cors::CorsLayer;
 use nimaproxy::turn_log;
 use nimaproxy::{config, AppState, ModelRouter, ModelStatsStore, RuntimeControls, Strategy};
 use tracing::{info, warn};
@@ -202,7 +203,9 @@ async fn main() {
         runtime_controls,
     );
 
-    let app = Router::new()
+    
+
+let app = Router::new()
         .route(
             "/v1/chat/completions",
             post(nimaproxy::proxy::chat_completions),
@@ -216,7 +219,8 @@ async fn main() {
         .route("/v1/embeddings", post(nimaproxy::proxy::embeddings))
         .route("/props", get(nimaproxy::proxy::props))
         .fallback(fallback_handler)
-        .with_state(state.clone());
+        .with_state(state.clone())
+        .layer(CorsLayer::permissive());
 
     async fn fallback_handler(
         uri: axum::http::Uri,
