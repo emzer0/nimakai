@@ -108,8 +108,8 @@ label = "key4"
 # path = "/var/log/nimaproxy/turns.jsonl"
 #
 # [timeouts]
-# min_dynamic_timeout_ms = 15000
-# dynamic_sample_floor = 25
+min_dynamic_timeout_ms = 120000
+dynamic_sample_floor = 25
 
 # ── NVIDIA Catalog Inference Defaults ─────────────────────────────────────
 # These values mirror the build.nvidia.com snippets for the current catalog
