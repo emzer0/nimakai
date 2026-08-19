@@ -1,8 +1,10 @@
-FROM  rust:1-bookworm AS builder
+
+
+FROM rust:1-bookworm AS builder
 
 WORKDIR /app
 
-COPY nimaproxy/Cargo.toml nimaproxy/Cargo.lock ./nimaproxy/
+COPY nimaproxy/ ./nimaproxy/
 
 WORKDIR /app/nimaproxy
 
