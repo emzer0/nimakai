@@ -149,7 +149,9 @@ fn apply_model_params(json: &mut Value, params: &crate::config::ModelParams) {
         json["min_p"] = Value::from(min_p);
     }
     if let Some(max_tokens) = params.max_tokens {
-        json["max_tokens"] = Value::from(max_tokens);
+        if !json.get("max_tokens").is_some() {
+            json["max_tokens"] = Value::from(max_tokens);
+        }
     }
     if let Some(reasoning_budget) = params.reasoning_budget {
         json["reasoning_budget"] = Value::from(reasoning_budget);
