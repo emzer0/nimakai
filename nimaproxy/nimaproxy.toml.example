@@ -116,11 +116,20 @@ label = "key4"
 # pool. `stream=false` may be injected when omitted. `stream=true` entries are
 # retained for catalog fidelity, but callers must request streaming explicitly.
 
+[racing]
+
+enabled = false
+
 [model_params."deepseek-ai/deepseek-v4-pro"]
+
 temperature = 1.0
+
 top_p = 0.95
+
 max_tokens = 16384
+
 stream = false
+
 chat_template_kwargs = { thinking = false }
 
 [model_params."nvidia/nemotron-3-ultra-550b-a55b"]
