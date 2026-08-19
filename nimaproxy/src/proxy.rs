@@ -3570,7 +3570,7 @@ pub async fn embeddings(
 pub async fn props() -> Response {
     eprintln!("[nimaproxy] GET /props");
     let props = serde_json::json!({
-        "contextWindow": 8192,
+        "contextWindow": 131072,
         "input": true,
         "supports_developer_role": true,
         "supports_tool_messages": true,

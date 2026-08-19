@@ -18,6 +18,14 @@ fn usage() -> ! {
     std::process::exit(1);
 }
 
+fn replace_listen_port(listen: &str, port: u16) -> String {
+    if let Some((host, _)) = listen.rsplit_once(':') {
+        format!("{}:{}", host, port)
+    } else {
+        format!("0.0.0.0:{}", port)
+    }
+}
+
 #[tokio::main]
 async fn main() {
     // Parse args first to get config path and port override
@@ -94,12 +102,26 @@ async fn main() {
         }
     }
 
-    // Determine actual listen address and port
-    // Treat port_override=0 as "use config default" (same as None)
+    // Determine actual listen address and port.
+    //
+    // Priority:
+    //   1. --port CLI argument
+    //   2. PORT environment variable (Render)
+    //   3. port from nimaproxy.toml
+    //
+    // Render requires the server to listen on 0.0.0.0.
+    let configured_listen = cfg.listen_addr();
+
     let listen = if let Some(p) = port_override.filter(|&p| p != 0) {
-        format!("127.0.0.1:{}", p)
+        replace_listen_port(&configured_listen, p)
+    } else if let Some(p) = std::env::var("PORT")
+        .ok()
+        .and_then(|v| v.parse::<u16>().ok())
+        .filter(|&p| p != 0)
+    {
+        replace_listen_port(&configured_listen, p)
     } else {
-        cfg.listen_addr()
+        configured_listen
     };
     let port: u16 = listen
         .split(':')
